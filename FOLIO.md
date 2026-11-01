@@ -35,16 +35,19 @@ than the calculation.
 
 ## Branches and image
 
-- `main` mirrors upstream `main`.
-- `folio/main` is the deployment branch: the fork commits on top of upstream.
+- `folio/main` is the deployment branch: the fork commits on top of the latest
+  upstream release tag (currently `v3.12.0`).
+- `main` stays at the fork point. Pushing upstream commits to it would start
+  upstream's `cache-warm.yml` in this fork, so leave it alone.
 - Pushing `folio/main` runs `.github/workflows/folio-image.yml`: Rust checks,
   then a linux/amd64 build that is smoke-tested and pushed to the private package
   `ghcr.io/gaspareduard/wealthfolio` as `folio-<short sha>` and `folio`.
   Deployments pin the `folio-<short sha>` tag.
 
-To take upstream changes, rebase `folio/main` onto `upstream/main`, run the
-checks below, push, and move the deployment to the new tag. Back up the
-database first: upstream releases can include migrations.
+To take a new upstream release, fetch its tag and rebase the fork commits onto
+it (`git rebase --onto vX.Y.Z <previous tag> folio/main`), run the checks below,
+push with `--force-with-lease`, and move the deployment to the new image tag.
+Back up the database first: upstream releases can include migrations.
 
 ## Checks
 

@@ -74,6 +74,12 @@ export function BrokerSplitTab() {
     .filter((item) => item.valuations.length > 0);
   const points = buildBrokerSplit(series, metric);
   const summary = summarizeBrokerSplit(series);
+  // One tick per month (its first point), so each month label appears once.
+  const monthTicks = points.flatMap((point, index) =>
+    index === 0 || point.date.slice(0, 7) !== points[index - 1].date.slice(0, 7)
+      ? [point.date]
+      : [],
+  );
 
   const config: ChartConfig = Object.fromEntries(
     series.map((item, index) => [
@@ -173,6 +179,7 @@ export function BrokerSplitTab() {
                 dataKey="date"
                 tickLine={false}
                 axisLine={false}
+                ticks={monthTicks}
                 minTickGap={48}
                 tickFormatter={(value: string) =>
                   formatCalendarDate(value, { month: "short", year: "2-digit" })

@@ -103,7 +103,14 @@ function RegimeSelect({ account, view }: { account: Account; view: TaxAccountVie
   };
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Select value={view.regime} onValueChange={onChange}>
+      <Select
+        items={RO_TAX_REGIMES.map((regime) => ({
+          value: regime,
+          label: t(`insights:ro_tax.regime.${regime}.short`),
+        }))}
+        value={view.regime}
+        onValueChange={onChange}
+      >
         <SelectTrigger className="h-8 w-[15rem]" aria-label={t("insights:ro_tax.regime_label")}>
           <SelectValue placeholder={t("insights:ro_tax.regime_unset")} />
         </SelectTrigger>

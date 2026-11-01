@@ -1,5 +1,6 @@
 import { getHistoricalValuations } from "@/adapters";
 import { useBalancePrivacy } from "@/hooks/use-balance-privacy";
+import { AccountIcon } from "@/features/account-icon/account-icon";
 import { useAccounts } from "@/hooks/use-accounts";
 import { QueryKeys } from "@/lib/query-keys";
 import { useQueries } from "@tanstack/react-query";
@@ -132,6 +133,10 @@ export function BrokerSplitTab() {
                     aria-hidden
                     className="inline-block size-2.5 rounded-full"
                     style={{ background: SERIES_COLORS[index % SERIES_COLORS.length] }}
+                  />
+                  <AccountIcon
+                    meta={accounts.find((account) => account.id === row.accountId)?.meta}
+                    className="size-5"
                   />
                   {row.accountName}
                 </CardDescription>

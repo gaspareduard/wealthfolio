@@ -102,6 +102,7 @@ import {
 import { format } from "date-fns";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useBackNavigation } from "@/pages/layouts/mobile-stack/use-mobile-stack";
+import { AccountIcon } from "@/features/account-icon/account-icon";
 import { AccountContributionLimit } from "./account-contribution-limit";
 import { AccountHeaderDetails } from "./account-header-details";
 import AccountHoldings from "./account-holdings";
@@ -929,6 +930,7 @@ const AccountPage = () => {
                           </span>
                         </>
                       ) : null}
+                      <AccountIcon meta={account?.meta} className="size-6" />
                       <span className="truncate text-base leading-tight font-semibold md:text-lg">
                         {account?.name ?? t("account:account")}
                       </span>
@@ -986,6 +988,7 @@ const AccountPage = () => {
                     }
                   >
                     <span className="flex min-w-0 items-center gap-1.5">
+                      <AccountIcon meta={account?.meta} className="size-6" />
                       <span className="truncate text-base leading-tight font-semibold">
                         {account?.name ?? t("account:account")}
                       </span>

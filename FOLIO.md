@@ -1,7 +1,7 @@
 # Folio fork
 
 A personal fork of [Wealthfolio](https://github.com/wealthfolio/wealthfolio) for
-a Romanian tax resident investing through XTB and IBKR. It adds three things on
+a Romanian tax resident investing through XTB and IBKR. It adds four things on
 top of upstream and changes nothing else.
 
 | Addition                                                                              | Where                                            |
@@ -9,6 +9,7 @@ top of upstream and changes nothing else.
 | **Insights → Taxes**: the Romanian tax view of current holdings                       | `apps/frontend/src/features/ro-tax/`             |
 | **Insights → Brokers**: how value and cost basis are split between accounts over time | `apps/frontend/src/features/broker-split/`       |
 | **Folio theme**, the default for new profiles                                         | `apps/frontend/src/themes/definitions/folio.css` |
+| **Account icons**: a broker logo beside the account name                              | `apps/frontend/src/features/account-icon/`       |
 
 ## Taxes tab
 
@@ -32,6 +33,14 @@ also lists the CASS bands for the year.
 Rates, legal references and sources live in `ro-tax/rules.ts`, with their
 retrieval date. When the law changes, update that file and its sources rather
 than the calculation.
+
+## Account icons
+
+An account can carry its own icon: a PNG data URL (at most 150 KB, the asset
+logo limit) in its `meta` JSON under `icon`. The dashboard account rows, the
+account page title and the Brokers and Taxes tabs draw it beside the account
+name; accounts without one look as before. Funds use Wealthfolio's own custom
+asset logos. The owner's tracker sets both.
 
 ## Branches and image
 

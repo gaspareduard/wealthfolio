@@ -1,4 +1,5 @@
 import { getActivities, getHoldings } from "@/adapters";
+import { AccountIcon } from "@/features/account-icon/account-icon";
 import { useAccounts } from "@/hooks/use-accounts";
 import { HoldingType } from "@/lib/constants";
 import { QueryKeys } from "@/lib/query-keys";
@@ -192,7 +193,10 @@ function AccountTaxCard({
       <CardHeader className="gap-3">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <CardTitle>{account.name}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <AccountIcon meta={account.meta} className="size-7" />
+              {account.name}
+            </CardTitle>
             {regime && regime !== "none" && (
               <CardDescription>{t(`insights:ro_tax.regime.${regime}.label`)}</CardDescription>
             )}

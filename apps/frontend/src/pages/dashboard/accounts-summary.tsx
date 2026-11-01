@@ -1,6 +1,7 @@
 "use client";
 
 import { calculatePerformanceSummaries, performanceSummaryScopeKey } from "@/adapters";
+import { AccountIcon } from "@/features/account-icon/account-icon";
 import { useAccounts } from "@/hooks/use-accounts";
 import { useCurrentAccountValuations } from "@/hooks/use-current-account-valuations";
 import { AccountPurpose } from "@/lib/constants";
@@ -42,6 +43,8 @@ interface AccountSummaryDisplayData {
   accountId?: string;
   accountType?: string;
   accountGroup?: string | null;
+  /** The account's meta JSON; carries its icon when it has one. */
+  accountMeta?: string | null;
   trackingMode?: TrackingMode;
   isGroup?: boolean;
   isActive?: boolean;
@@ -286,6 +289,7 @@ const AccountSummaryComponent = React.memo(
       <>
         <div className="flex min-w-0 flex-1 flex-col gap-1 md:gap-1.5">
           <h3 className="flex items-center gap-1.5 text-sm leading-tight font-semibold md:text-base md:font-semibold">
+            {!isGroup && <AccountIcon meta={item.accountMeta} className="size-5 md:size-6" />}
             <span className="truncate">{name}</span>
             {shouldShowWarning && (
               <Tooltip>
@@ -494,6 +498,7 @@ export const AccountsSummary = React.memo(
             accountId: acc.id,
             accountType: acc.accountType,
             accountGroup: acc.group ?? null,
+            accountMeta: acc.meta ?? null,
             trackingMode: acc.trackingMode,
             isGroup: false,
             isActive: acc.isActive,
@@ -526,6 +531,7 @@ export const AccountsSummary = React.memo(
           accountId: acc.id,
           accountType: acc.accountType,
           accountGroup: acc.group ?? null,
+          accountMeta: acc.meta ?? null,
           trackingMode: acc.trackingMode,
           isGroup: false,
           isActive: acc.isActive,

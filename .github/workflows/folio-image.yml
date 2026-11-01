@@ -1,0 +1,98 @@
+name: Folio image
+
+# Fork-only (gaspareduard/wealthfolio): builds the `folio/main` deployment branch
+# as a linux/amd64 server image, smoke-tests it, and pushes it to this account's
+# GHCR namespace. The package is private; the TrueNAS host pulls it with a
+# read:packages token. Upstream workflows are left unchanged. See FOLIO.md.
+
+on:
+  push:
+    branches: [folio/main]
+  workflow_dispatch:
+
+concurrency:
+  group: folio-image
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    name: Rust checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      # rustup then installs the channel pinned in rust-toolchain.toml.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: folio-rust-check
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      # The fork changes the default theme constant in wealthfolio-core.
+      - name: Settings tests
+        run: cargo test --locked -p wealthfolio-core settings_service
+
+  image:
+    name: Build, test and push
+    needs: rust
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/wealthfolio
+          tags: |
+            type=raw,value=folio
+            type=sha,prefix=folio-
+
+      - name: Build the image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: wealthfolio-smoke:ci
+          labels: ${{ steps.meta.outputs.labels }}
+          # Upstream's public cache of the third-party Rust dependencies
+          # (exported by its cache-warm.yml). Built without Wealthfolio Connect.
+          cache-from: type=registry,ref=ghcr.io/wealthfolio/wealthfolio-build-cache:deps-amd64
+
+      # 568:568 is the TrueNAS apps user the container runs as.
+      - name: Test runtime compatibility and encryption in the built image
+        run: |
+          python3 .github/scripts/encryption_smoke.py --image wealthfolio-smoke:ci
+          python3 .github/scripts/encryption_smoke.py --image wealthfolio-smoke:ci --user 568:568
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push the tested image
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          while IFS= read -r tag; do
+            test -n "$tag" || continue
+            docker tag wealthfolio-smoke:ci "$tag"
+            docker push "$tag"
+          done <<< "$TAGS"

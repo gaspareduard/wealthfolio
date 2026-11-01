@@ -67,7 +67,9 @@
       "accounts_count_one": "{{count}} Konto",
       "accounts_count_other": "{{count}} Konten",
       "pnl_current_holdings": "Aktuelle Positionen"
-    }
+    },
+    "tab_brokers": "Brokers",
+    "tab_taxes": "Taxes"
   },
   "networth": {
     "attention": {
@@ -164,5 +166,100 @@
     "hide": "{{widget}} ausblenden",
     "drag": "{{widget}} ziehen",
     "empty": "Keine Widgets ausgewählt. Passen Sie diese Seite an, um Widgets hinzuzufügen."
+  },
+  "broker_split": {
+    "title": "Money split between brokers",
+    "description_value": "Each account's value over time, stacked. Combined today: {{total}}.",
+    "description_share": "Each account's share of the combined value over time.",
+    "description_invested": "Money in each account's holdings (cost basis) over time, stacked.",
+    "metric_value": "Value",
+    "metric_share": "Share",
+    "metric_invested": "Invested",
+    "card_note": "{{share}}% of the total · {{invested}} invested",
+    "note": "Accounts start at zero before their first valuation; gaps carry the last valuation forward. Holding the same fund at two brokers does not diversify the underlying assets.",
+    "empty_title": "No account history yet",
+    "empty_body": "Add activities to at least one account to see how your money is split."
+  },
+  "ro_tax": {
+    "intro": "How Romanian tax applies to each broker in {{year}}, assuming Romanian tax residence. Rules checked {{date}}; research notes, not tax advice.",
+    "so_far": "Capital-gains tax this year",
+    "none_yet": "None yet",
+    "sales_one": "{{count}} sale",
+    "sales_other": "{{count}} sales",
+    "so_far_none": "No sales recorded in {{year}}. Holding, buying and value changes are not taxed; a sale or a distribution is.",
+    "so_far_sales": "Recorded sales this year are taxed under each broker's regime below.",
+    "if_sold": "If you sold everything today",
+    "illustration": "Illustration",
+    "if_sold_note": "From today's value and cost basis, in the base currency. The real figure is computed in lei, per sale.",
+    "deadline": "Next filing deadline",
+    "deadline_note": "Declaratia unica (form 212) for {{year}}. Needed if you sell at a self-declared broker, receive a fund distribution, or your non-salary income reaches {{threshold}}.",
+    "regime_label": "Tax regime",
+    "regime_unset": "Choose tax regime",
+    "regime_assumed": "Assumed from name",
+    "regime": {
+      "ro-intermediary": {
+        "short": "3% / 6% withheld",
+        "label": "Withheld by a Romanian intermediary",
+        "rate": "{{long}}% if held at least {{days}} days, {{short}}% below that",
+        "who": "The broker withholds it on each profitable sale; final tax",
+        "losses": "A losing sale pays nothing, but the loss is final: no offset, no carry-forward",
+        "filing": "Nothing to declare for these gains; the broker sends a yearly statement by the end of February",
+        "legal": "Legal basis:"
+      },
+      "self-declared": {
+        "short": "16% self-declared",
+        "label": "Self-declared (no Romanian intermediary branch)",
+        "rate": "{{rate}}% of the year's net gain; holding period does not change it",
+        "who": "You declare and pay it yourself",
+        "losses": "Losses offset gains in the same year; a net loss carries forward {{years}} years, up to {{pct}}% of each later year's net gain",
+        "filing": "Declaratia unica (form 212) by 25 May of the following year",
+        "legal": "Legal basis:"
+      },
+      "none": {
+        "short": "Not taxed in Romania"
+      }
+    },
+    "rows": {
+      "rate": "Rate",
+      "who": "Who handles it",
+      "losses": "Losses",
+      "filing": "Filing"
+    },
+    "columns": {
+      "fund": "Fund",
+      "gain": "Gain / loss",
+      "holding": "Holding",
+      "tax": "Tax if sold"
+    },
+    "lot": "{{quantity}} u · {{date}}",
+    "rate_now": "{{rate}}% now",
+    "rate_from": "{{rate}}% from {{date}}",
+    "undated": "{{quantity}} u · buy date not recorded",
+    "rate_either": "{{long}}% or {{short}}%",
+    "holding_irrelevant_one": "{{count}} recorded buy; holding period does not change the rate",
+    "holding_irrelevant_other": "{{count}} recorded buys; holding period does not change the rate",
+    "footer_intermediary": "If sold today: about {{amount}} withheld.",
+    "next_lower_rate": "The first lot reaches the {{rate}}% rate on {{date}}.",
+    "footer_self_gain": "If sold today: net gain {{net}} (losses already subtracted) × {{rate}}% ≈ {{amount}} to declare by {{date}}.",
+    "footer_self_loss": "If sold today: net loss {{net}}, no tax; up to {{pct}}% of later years' net gains could be offset for {{years}} years.",
+    "footer_unknown_cost": "Net gain unknown: a cost basis is missing.",
+    "footer_none": "This account is marked as not taxed in Romania.",
+    "footer_unset": "Choose this account's tax regime to see its tax.",
+    "distributions_title": "Fund distributions",
+    "distributions_body": "Dividends and fund distributions paid from 1 January 2026 are taxed at {{rate}}% and declared in the declaratia unica, even at XTB; foreign tax withheld may be creditable. Accumulating funds pay nothing out, so their growth is taxed only when you sell.",
+    "cass_title": "CASS health contribution",
+    "cass_rate": "{{rate}}% of a fixed base",
+    "cass_body": "Non-salary income is added up: investment gains (including gains already taxed by a Romanian intermediary, counted gross), net gains via foreign brokers, dividends, interest and rent. Salary does not count.",
+    "cass_income": "Non-salary income in the year",
+    "cass_due": "CASS due",
+    "cass_below": "Below {{amount}}",
+    "cass_nothing": "Nothing",
+    "cass_or_more": "{{amount}} or more",
+    "cass_note": "Based on the {{wage}} minimum gross wage in force on 1 January {{year}}. Other non-salary income is not tracked here, so this page cannot tell whether you reach the threshold.",
+    "lei_title": "Lei, not euros",
+    "lei_body": "Tax is computed in lei. For self-declared gains, purchases and sales are converted at the BNR rate valid on each transaction day, so the gain in lei can differ from the gain shown here.",
+    "unrealized_body": "Unrealized gains and value changes are not taxable income. Tax arises when you sell, or when a fund pays a distribution.",
+    "sources_title": "Sources and limits",
+    "disclaimer": "Assumes Romanian tax residence. Rules change often; recheck before filing. Figures are rough illustrations from today's values, not a tax bill. A Romanian tax adviser should confirm anything you act on."
   }
 }

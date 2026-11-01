@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader } from "@wealthfolio/ui/components/ui/car
 import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
 import { Suspense, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { BrokerSplitTab } from "@/features/broker-split/broker-split-tab";
+import { RoTaxTab } from "@/features/ro-tax/taxes-tab";
 import { OverviewPage } from "./overview/overview-page";
 
 // Loading skeleton to show while the dashboard is loading
@@ -98,6 +100,26 @@ export default function PortfolioInsightsPage() {
         content: (
           <Suspense fallback={<DashboardLoader />}>
             <IncomePage />
+          </Suspense>
+        ),
+      },
+      {
+        value: "brokers",
+        label: t("insights:insights.tab_brokers"),
+        icon: Icons.Split,
+        content: (
+          <Suspense fallback={<DashboardLoader />}>
+            <BrokerSplitTab />
+          </Suspense>
+        ),
+      },
+      {
+        value: "taxes",
+        label: t("insights:insights.tab_taxes"),
+        icon: Icons.ReceiptText,
+        content: (
+          <Suspense fallback={<DashboardLoader />}>
+            <RoTaxTab />
           </Suspense>
         ),
       },

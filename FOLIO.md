@@ -4,11 +4,11 @@ A personal fork of [Wealthfolio](https://github.com/wealthfolio/wealthfolio) for
 a Romanian tax resident investing through XTB and IBKR. It adds three things on
 top of upstream and changes nothing else.
 
-| Addition | Where |
-| --- | --- |
-| **Insights → Taxes**: the Romanian tax view of current holdings | `apps/frontend/src/features/ro-tax/` |
-| **Insights → Brokers**: how value and cost basis are split between accounts over time | `apps/frontend/src/features/broker-split/` |
-| **Folio theme**, the default for new profiles | `apps/frontend/src/themes/definitions/folio.css` |
+| Addition                                                                              | Where                                            |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| **Insights → Taxes**: the Romanian tax view of current holdings                       | `apps/frontend/src/features/ro-tax/`             |
+| **Insights → Brokers**: how value and cost basis are split between accounts over time | `apps/frontend/src/features/broker-split/`       |
+| **Folio theme**, the default for new profiles                                         | `apps/frontend/src/themes/definitions/folio.css` |
 
 ## Taxes tab
 
@@ -40,8 +40,10 @@ than the calculation.
 - `main` stays at the fork point. Pushing upstream commits to it would start
   upstream's `cache-warm.yml` in this fork, so leave it alone.
 - Pushing `folio/main` runs `.github/workflows/folio-image.yml`: Rust checks,
-  then a linux/amd64 build that is smoke-tested and pushed to the private package
-  `ghcr.io/gaspareduard/wealthfolio` as `folio-<short sha>` and `folio`.
+  then a linux/amd64 build that is smoke-tested and pushed to the package
+  `ghcr.io/gaspareduard/wealthfolio` as `folio-<short sha>` and `folio`. GHCR
+  made the package public because this fork is public; it holds only this fork's
+  code, never portfolio data. Changes to Markdown files alone skip the build.
   Deployments pin the `folio-<short sha>` tag.
 
 To take a new upstream release, fetch its tag and rebase the fork commits onto

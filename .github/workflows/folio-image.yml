@@ -2,12 +2,14 @@ name: Folio image
 
 # Fork-only (gaspareduard/wealthfolio): builds the `folio/main` deployment branch
 # as a linux/amd64 server image, smoke-tests it, and pushes it to this account's
-# GHCR namespace. The package is private; the TrueNAS host pulls it with a
-# read:packages token. Upstream workflows are left unchanged. See FOLIO.md.
+# GHCR namespace. GHCR made the package public because the fork is public; it
+# holds only the fork's code. The TrueNAS host pulls it with a read:packages
+# token. Upstream workflows are left unchanged. See FOLIO.md.
 
 on:
   push:
     branches: [folio/main]
+    paths-ignore: ["**.md"]
   workflow_dispatch:
 
 concurrency:

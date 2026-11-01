@@ -53,21 +53,21 @@ async function classReads(classes: string[]) {
 }
 
 describe("ThemePicker", () => {
-  it("offers every theme, Classic first, and checks the saved one", () => {
+  it("offers every theme, Folio first, and checks the saved one", () => {
     render(<ThemePicker value="ember" onChange={vi.fn()} />);
     const radios = screen.getAllByRole("radio");
     expect(radios.map((radio) => (radio as HTMLInputElement).value)).toEqual(
       themes.map(({ id }) => id),
     );
-    expect(radios[0]).toHaveAccessibleName("Classic");
+    expect(radios[0]).toHaveAccessibleName("Folio");
     expect(screen.getByRole("radio", { name: /Ember/ })).toBeChecked();
   });
 
-  it("checks the default theme, Signature, for a missing or unknown theme", () => {
+  it("checks the default theme, Folio, for a missing or unknown theme", () => {
     const { rerender } = render(<ThemePicker onChange={vi.fn()} />);
-    expect(screen.getByRole("radio", { name: "Signature" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Folio" })).toBeChecked();
     rerender(<ThemePicker value="from-a-newer-version" onChange={vi.fn()} />);
-    expect(screen.getByRole("radio", { name: "Signature" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Folio" })).toBeChecked();
   });
 
   it("reports the picked theme and describes the mode a theme is designed for", () => {
@@ -114,6 +114,7 @@ describe("ThemePicker", () => {
       ]),
     );
     expect(fonts).toEqual({
+      folio: "font-serif",
       classic: "font-mono",
       ember: "font-serif",
       signature: "font-sans",

@@ -1,0 +1,159 @@
+/* @name Folio */
+/* @mode dark */
+:root {
+  /* Quiet editorial chrome after slopalytics.com's palette: white page, warm
+     off-white panels edged by hairlines rather than shadows, warm grey text and a
+     single brown accent for actions and focus. Colour is kept for data. */
+  --radius: 0.5rem;
+  --button-radius: 0.5rem;
+  --control-radius: 0.5rem;
+  --control-height: 2.25rem;
+  --card-radius: 0.5rem;
+  --card-border: #e8e4df;
+  --card-shadow: 0 0 #0000;
+  --popup-radius: 0.5rem;
+  --dialog-radius: 0.75rem;
+  --badge-radius: 0.3125rem;
+  --segmented-radius: 0.5rem;
+  --background: #ffffff;
+  --foreground: #20201e;
+  --card: #f8f6f3;
+  --card-foreground: #20201e;
+  --popover: #ffffff;
+  --popover-foreground: #20201e;
+  --primary: #806047;
+  --primary-foreground: #ffffff;
+  --secondary: #f1eeea;
+  --secondary-foreground: #20201e;
+  --muted: #f1eeea;
+  --muted-foreground: #625d57;
+  --accent: #f1eeea;
+  --accent-foreground: #20201e;
+  --destructive: #942822;
+  --destructive-foreground: #ffffff;
+  --success: #536907;
+  --success-foreground: #ffffff;
+  --warning: #74510a;
+  --warning-foreground: #ffffff;
+  --border: #e8e4df;
+  --input: #ccc5be;
+  --ring: #806047;
+  /* Warm, clearly separate hues so stacked series read apart: brown, slate,
+     terracotta, olive, plum, then softer steps. */
+  --chart-1: #806047;
+  --chart-2: #3f6b7a;
+  --chart-3: #a4532f;
+  --chart-4: #5e6b2e;
+  --chart-5: #6e5487;
+  --chart-6: #a68a6d;
+  --chart-7: #7f9aa4;
+  --chart-8: #c9a07a;
+  --chart-9: #b8ae9f;
+  --chart-stone: #ccc5be;
+  --spending-accent: #3f6b7a;
+  --spending-deep: #3f6b7a;
+  --spending-mid: #7f9aa4;
+  --investments: #806047;
+  --net-worth: #a4532f;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #20201e;
+  --sidebar-primary: #806047;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1eeea;
+  --sidebar-accent-foreground: #20201e;
+  --sidebar-border: #e8e4df;
+  --sidebar-ring: #806047;
+  --toast-border: #e8e4df;
+  --heatmap-positive-low: #e6ecd5;
+  --heatmap-positive-high: #8a9c57;
+  --heatmap-negative-low: #fae2da;
+  --heatmap-negative-high: #bd6f60;
+  --heatmap-blue-low: #dbe9fb;
+  --heatmap-blue-high: #5b8ac4;
+  /* Treemap middle stops halfway between low and high, so the ramp stays a straight
+     blend. Dark mode mixes its own low and high. */
+  --heatmap-positive-mid: color-mix(
+    in srgb,
+    var(--heatmap-positive-low),
+    var(--heatmap-positive-high)
+  );
+  --heatmap-negative-mid: color-mix(
+    in srgb,
+    var(--heatmap-negative-low),
+    var(--heatmap-negative-high)
+  );
+  --heatmap-blue-mid: color-mix(in srgb, var(--heatmap-blue-low), var(--heatmap-blue-high));
+  --heatmap-label-dark: #20201e;
+  --heatmap-label-light: #ffffff;
+  --button-weight: 550;
+  --card-title-tracking: -0.01em;
+}
+
+/* Dark: a true-black page, near-black warm panels and hairlines, white text with
+   warm greys, and a pale beige accent with a black label. */
+.dark {
+  --card-border: #1c1a18;
+  --card-shadow: 0 0 #0000;
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0d0b0a;
+  --card-foreground: #ffffff;
+  --popover: #141210;
+  --popover-foreground: #ffffff;
+  --primary: #c5ac98;
+  --primary-foreground: #000000;
+  --secondary: #141210;
+  --secondary-foreground: #f1ebe5;
+  /* Lighter than the page and cards, so a segmented control's thumb (the page
+     colour) reads on its track. */
+  --muted: #1c1a18;
+  --muted-foreground: #aaa39d;
+  --accent: #141210;
+  --accent-foreground: #f1ebe5;
+  --destructive: hsl(12 80% 66%);
+  --destructive-foreground: #1e0d0a;
+  --success: #a0af54;
+  --success-foreground: #12160a;
+  --warning: #e5c478;
+  --warning-foreground: #241c0a;
+  --border: #1c1a18;
+  --input: #36312d;
+  --input-bg: #0d0b0a;
+  --ring: #c5ac98;
+  --chart-1: #c5ac98;
+  --chart-2: #7fa7b5;
+  --chart-3: #d98a66;
+  --chart-4: #a3b36b;
+  --chart-5: #b49ccb;
+  --chart-6: #8e7867;
+  --chart-7: #5d7c87;
+  --chart-8: #e2c7a8;
+  --chart-9: #77716c;
+  --chart-stone: #77716c;
+  --spending-accent: #7fa7b5;
+  --spending-deep: #7fa7b5;
+  --spending-mid: #5d7c87;
+  --investments: #e8e1d9;
+  --net-worth: #d98a66;
+  --sidebar: #000000;
+  --sidebar-foreground: #f1ebe5;
+  --sidebar-primary: #c5ac98;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #141210;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1c1a18;
+  --sidebar-ring: #c5ac98;
+  --toast-border: #36312d;
+  --heatmap-accent: #a3b36b;
+  --status-warn: #e5c478;
+  --event-default: #c5ac98;
+  --event-today: #e2c7a8;
+  --heatmap-positive-low: #2a3018;
+  --heatmap-positive-high: #8a9c57;
+  --heatmap-negative-low: #3a1d16;
+  --heatmap-negative-high: #c4705c;
+  --heatmap-blue-low: #142430;
+  --heatmap-blue-high: #5b8ac4;
+  --heatmap-label-dark: #0d0b0a;
+  --heatmap-label-light: #ffffff;
+}

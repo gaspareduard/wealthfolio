@@ -443,19 +443,19 @@ mod tests {
     }
 
     #[test]
-    fn settings_without_a_theme_read_as_signature() {
+    fn settings_without_a_theme_read_as_folio() {
         let mut value = serde_json::to_value(Settings::default()).unwrap();
         value.as_object_mut().unwrap().remove("themeId");
         value["theme"] = serde_json::json!("system");
         let settings: Settings = serde_json::from_value(value).unwrap();
-        assert_eq!(settings.theme_id, "signature");
+        assert_eq!(settings.theme_id, "folio");
         assert_eq!(settings.theme, "system");
     }
 
     #[test]
-    fn new_profiles_start_on_signature_with_its_font() {
+    fn new_profiles_start_on_folio_with_its_font() {
         let settings = Settings::default();
-        assert_eq!(settings.theme_id, "signature");
+        assert_eq!(settings.theme_id, "folio");
         assert_eq!(settings.font, "font-sans");
     }
 

@@ -27,6 +27,7 @@ const formatOptions = JSON.parse(await readFile(resolve(frontend, "../../.oxfmtr
 export const baseTheme = "classic";
 // The picker's order; themes not listed follow alphabetically.
 export const themeOrder = [
+  "folio",
   "classic",
   "signature",
   "ember",

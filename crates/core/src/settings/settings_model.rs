@@ -9,10 +9,11 @@ pub const CURRENCY_FORMATTING_REGIONS_KEY: &str = "currency_formatting_regions";
 /// lists. The frontend owns the theme list and shows the default theme for an ID
 /// it does not know, so an ID saved by a newer version survives an older one.
 pub const THEME_ID_KEY: &str = "theme_id";
-/// New profiles start on Signature with the font it suggests. Profiles that
-/// finished onboarding before Signature became the default kept Classic and Mono:
-/// migration `2026-10-29-000002_signature_default_theme` stored them.
-pub const DEFAULT_THEME_ID: &str = "signature";
+/// New profiles start on Folio (this fork's default) with the font it suggests.
+/// Profiles that finished onboarding before Signature became the upstream default
+/// kept Classic and Mono: migration `2026-10-29-000002_signature_default_theme`
+/// stored them.
+pub const DEFAULT_THEME_ID: &str = "folio";
 pub const DEFAULT_FONT: &str = "font-sans";
 /// Text size: a name the frontend maps to a root font size. Device-local like the
 /// theme, and the frontend shows the default size for a name it does not know.

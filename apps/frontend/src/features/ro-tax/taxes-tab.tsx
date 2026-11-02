@@ -1,4 +1,5 @@
 import { getActivities, getHoldings } from "@/adapters";
+import { TickerAvatar } from "@/components/ticker-avatar";
 import { AccountIcon } from "@/features/account-icon/account-icon";
 import { useAccounts } from "@/hooks/use-accounts";
 import { HoldingType } from "@/lib/constants";
@@ -239,7 +240,16 @@ function AccountTaxCard({
             <TableBody>
               {view.positions.map((position) => (
                 <TableRow key={position.assetId}>
-                  <TableCell className="align-top font-medium">{position.symbol}</TableCell>
+                  <TableCell className="align-top font-medium">
+                    <span className="flex items-center gap-2">
+                      <TickerAvatar
+                        symbol={position.symbol}
+                        assetId={position.assetId}
+                        className="size-6 shrink-0"
+                      />
+                      {position.symbol}
+                    </span>
+                  </TableCell>
                   <TableCell
                     className={`text-end align-top ${
                       position.gain === null

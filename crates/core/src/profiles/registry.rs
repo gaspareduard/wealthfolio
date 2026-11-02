@@ -1182,7 +1182,11 @@ mod tests {
             "data:image/svg+xml;base64,PHN2Zz4=".into(),
             "../../unrecognized".into(),
         ] {
-            assert!(!is_valid_avatar(&avatar), "{}", &avatar[..avatar.len().min(40)]);
+            assert!(
+                !is_valid_avatar(&avatar),
+                "{}",
+                &avatar[..avatar.len().min(40)]
+            );
         }
 
         let dir = tempfile::tempdir().unwrap();
@@ -1193,8 +1197,12 @@ mod tests {
         )
         .unwrap();
         let id = registry.default_id().unwrap();
-        registry.update(id, "Personal", &png(160, 160, 100)).unwrap();
-        assert!(registry.update(id, "Personal", &png(160, 120, 100)).is_err());
+        registry
+            .update(id, "Personal", &png(160, 160, 100))
+            .unwrap();
+        assert!(registry
+            .update(id, "Personal", &png(160, 120, 100))
+            .is_err());
         drop(registry);
         let registry = ProfileRegistry::open(
             dir.path().into(),

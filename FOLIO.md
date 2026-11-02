@@ -1,13 +1,14 @@
 # Folio fork
 
 A personal fork of [Wealthfolio](https://github.com/wealthfolio/wealthfolio) for
-a Romanian tax resident investing through XTB and IBKR. It adds six things on
+a Romanian tax resident investing through XTB and IBKR. It adds seven things on
 top of upstream and changes nothing else.
 
 | Addition                                                                              | Where                                                  |
 | ------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | **Insights → Taxes**: the Romanian tax view of current holdings                       | `apps/frontend/src/features/ro-tax/`                   |
 | **Insights → Brokers**: how value and cost basis are split between accounts over time | `apps/frontend/src/features/broker-split/`             |
+| **Insights → Projection**: what a fixed monthly amount could add up to                | `apps/frontend/src/features/projection/`               |
 | **Folio theme**, the default for new profiles                                         | `apps/frontend/src/themes/definitions/folio.css`       |
 | **Account icons**: a broker logo beside the account name                              | `apps/frontend/src/features/account-icon/`             |
 | **Cat profile avatars**: a pink and a blue cat in a Cats group of the avatar picker   | `apps/frontend/src/features/profiles/cat-avatars.tsx`  |
@@ -35,6 +36,16 @@ also lists the CASS bands for the year.
 Rates, legal references and sources live in `ro-tax/rules.ts`, with their
 retrieval date. When the law changes, update that file and its sources rather
 than the calculation.
+
+## Projection tab
+
+An illustration, not a forecast. It starts from today's total value of all
+accounts, adds a monthly amount (typed, or €0/600/800/1,000 presets) at each
+month end, and compounds a constant yearly return (−5%, 0%, 3%, 5% or 8%)
+monthly over 1 to 30 years. It shows the end value split into money put in and
+returns, the range across the five rates, a chart, when the value would reach
+€10k to €250k, and a year-by-year table. Nominal amounts, before fees, tax and
+inflation. The maths is in `projection/projection.ts`; nothing is saved.
 
 ## Account icons
 

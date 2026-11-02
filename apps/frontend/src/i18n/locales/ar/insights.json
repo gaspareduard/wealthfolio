@@ -111,7 +111,8 @@
       "portfolio_value": "قيمة المحفظة"
     },
     "tab_brokers": "Brokers",
-    "tab_taxes": "Taxes"
+    "tab_taxes": "Taxes",
+    "tab_projection": "Projection"
   },
   "networth": {
     "add_first_asset": "أضف أول أصل لك",
@@ -285,5 +286,38 @@
     "unrealized_body": "Unrealized gains and value changes are not taxable income. Tax arises when you sell, or when a fund pays a distribution.",
     "sources_title": "Sources and limits",
     "disclaimer": "Assumes Romanian tax residence. Rules change often; recheck before filing. Figures are rough illustrations from today's values, not a tax bill. A Romanian tax adviser should confirm anything you act on."
+  },
+  "projection": {
+    "title": "Projection",
+    "description": "What investing a fixed amount each month could add up to, starting from today's value. An illustration, not a forecast.",
+    "monthly_label": "Invest each month",
+    "monthly_presets": "Monthly amount presets",
+    "years_label": "For",
+    "years_short": "{{years}}y",
+    "rate_label": "If the portfolio returns, every year",
+    "could_be_worth": "Could be worth",
+    "by_when": "by {{date}}, at {{rate}} a year",
+    "paid_in": "You put in",
+    "from_returns": "From returns",
+    "range": "Across {{lowRate}} to {{highRate}} a year the result ranges from {{low}} to {{high}}. Today's starting value: {{start}}.",
+    "chart_title": "Value over time",
+    "chart_description": "Hypothetical value at the chosen return, against the money put in.",
+    "series_value": "Value",
+    "series_paidIn": "Money put in",
+    "milestones": "Milestones",
+    "milestone_reached": "Reached",
+    "milestone_beyond": "Not within {{years}}y",
+    "milestone_in": "in {{span}}",
+    "span_months": "{{months}}m",
+    "span_years": "{{years}}y",
+    "span_years_months": "{{years}}y {{months}}m",
+    "table_title": "Year by year",
+    "method": "Starts from today's total value of all accounts. The monthly amount is added at each month end and the yearly return is compounded monthly, at the same rate every year. Nominal amounts, before future fees, tax and inflation. Real markets do not move in a straight line and can fall for years; the rates are assumptions to compare, not probabilities.",
+    "column_after": "After",
+    "column_date": "Date",
+    "column_value": "Value",
+    "today": "Today",
+    "empty_title": "No portfolio value yet",
+    "empty_body": "Add accounts and activities to project their value."
   }
 }

@@ -12,6 +12,7 @@ import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
 import { Suspense, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { BrokerSplitTab } from "@/features/broker-split/broker-split-tab";
+import { ProjectionTab } from "@/features/projection/projection-tab";
 import { RoTaxTab } from "@/features/ro-tax/taxes-tab";
 import { OverviewPage } from "./overview/overview-page";
 
@@ -120,6 +121,16 @@ export default function PortfolioInsightsPage() {
         content: (
           <Suspense fallback={<DashboardLoader />}>
             <RoTaxTab />
+          </Suspense>
+        ),
+      },
+      {
+        value: "projection",
+        label: t("insights:insights.tab_projection"),
+        icon: Icons.Target,
+        content: (
+          <Suspense fallback={<DashboardLoader />}>
+            <ProjectionTab />
           </Suspense>
         ),
       },

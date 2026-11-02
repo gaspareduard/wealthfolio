@@ -456,6 +456,7 @@
     "avatarGroup": "{{style}}头像",
     "avatarLabel": "{{style}}头像 {{number}}",
     "avatarAll": "全部",
+    "avatarCats": "Cats",
     "avatarSketch": "素描",
     "avatarLine": "线条",
     "avatarPixel": "像素画",

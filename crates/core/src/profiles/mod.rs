@@ -61,6 +61,9 @@ pub const PROFILE_AVATARS: &[&str] = &[
     "abstract-dancer-animated",
     "abstract-explorer-animated",
     "abstract-dreamer-animated",
+    // Folio fork: drawn in SVG by the frontend.
+    "folio-cat-pink",
+    "folio-cat-blue",
 ];
 
 #[derive(Debug, thiserror::Error)]

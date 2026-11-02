@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { FOLIO_CATS } from "./avatar-catalog";
 import { DEFAULT_PROFILE_AVATAR, PROFILE_AVATARS, ProfileAvatar } from "./profile-avatar";
 
 describe("profile avatars", () => {
@@ -17,7 +18,7 @@ describe("profile avatars", () => {
 
       const markup = renderToStaticMarkup(<ProfileAvatar id={id} />);
       const assets = [...markup.matchAll(/\/avatars\/([a-z0-9-]+\.png)/g)];
-      if (id === DEFAULT_PROFILE_AVATAR) {
+      if (id === DEFAULT_PROFILE_AVATAR || id in FOLIO_CATS) {
         expect(markup).toContain("<svg");
         expect(assets).toHaveLength(0);
       } else {

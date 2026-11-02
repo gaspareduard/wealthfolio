@@ -351,7 +351,22 @@ export const ANIMATED_SKETCH: Record<
   },
 };
 
+/** Folio fork: round cats with a nub tail, drawn in SVG (no atlas image). */
+export interface Cat {
+  fur: string;
+  shade: string;
+  background: string;
+}
+export const FOLIO_CATS: Record<string, Cat> = {
+  "folio-cat-pink": { fur: "#F7A8C4", shade: "#E7739E", background: "#FDE3EC" },
+  "folio-cat-blue": { fur: "#8EC1EE", shade: "#5E9BD6", background: "#DDEBFA" },
+};
+
 export const PROFILE_AVATAR_GROUPS = [
+  {
+    name: "Cats",
+    avatars: Object.keys(FOLIO_CATS),
+  },
   {
     name: "Sketch",
     avatars: [

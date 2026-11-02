@@ -6,6 +6,7 @@ import {
   ANIMATED_PIXEL,
   ANIMATED_SKETCH,
   ABSTRACT_SCULPTURES,
+  FOLIO_CATS,
 } from "./avatar-catalog";
 export { DEFAULT_PROFILE_AVATAR, PROFILE_AVATARS, PROFILE_AVATAR_GROUPS } from "./avatar-catalog";
 import type { CSSProperties } from "react";
@@ -13,6 +14,7 @@ import { UserIcon } from "@phosphor-icons/react/dist/csr/User";
 import "./profile-avatar.css";
 import { LinePortraitAvatar } from "./line-portrait-avatars";
 import { PersonaAvatar } from "./persona-avatars";
+import { CatAvatar } from "./cat-avatars";
 import { cn } from "@wealthfolio/ui/lib/utils";
 
 export function ProfileAvatar({
@@ -30,6 +32,8 @@ export function ProfileAvatar({
 function AvatarArtwork({ id, className }: { id: string; className?: string }) {
   const portrait = LINE_PORTRAITS.find((candidate) => candidate.id === id);
   if (portrait) return <LinePortraitAvatar portrait={portrait} className={className} />;
+  const cat = FOLIO_CATS[id];
+  if (cat) return <CatAvatar cat={cat} className={className} />;
   const persona = PERSONA_AVATARS.find((candidate) => candidate.id === id);
   if (persona) return <PersonaAvatar persona={persona} className={className} />;
   const sketch = ANIMATED_SKETCH[id];

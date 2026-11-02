@@ -17,6 +17,7 @@ export function ProfileAvatarPicker({
   ];
   const labels: Record<string, string> = {
     All: t("profiles.avatarAll"),
+    Cats: t("profiles.avatarCats"),
     Sketch: t("profiles.avatarSketch"),
     Line: t("profiles.avatarLine"),
     "Pixel art": t("profiles.avatarPixel"),

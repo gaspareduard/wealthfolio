@@ -465,6 +465,7 @@
     "avatarGroup": "{{style}} avatars",
     "avatarLabel": "{{style}} avatar {{number}}",
     "avatarAll": "All",
+    "avatarCats": "Cats",
     "avatarSketch": "Sketch",
     "avatarLine": "Line",
     "avatarPixel": "Pixel art",

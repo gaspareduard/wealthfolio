@@ -1,15 +1,16 @@
 # Folio fork
 
 A personal fork of [Wealthfolio](https://github.com/wealthfolio/wealthfolio) for
-a Romanian tax resident investing through XTB and IBKR. It adds four things on
+a Romanian tax resident investing through XTB and IBKR. It adds five things on
 top of upstream and changes nothing else.
 
-| Addition                                                                              | Where                                            |
-| ------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **Insights → Taxes**: the Romanian tax view of current holdings                       | `apps/frontend/src/features/ro-tax/`             |
-| **Insights → Brokers**: how value and cost basis are split between accounts over time | `apps/frontend/src/features/broker-split/`       |
-| **Folio theme**, the default for new profiles                                         | `apps/frontend/src/themes/definitions/folio.css` |
-| **Account icons**: a broker logo beside the account name                              | `apps/frontend/src/features/account-icon/`       |
+| Addition                                                                              | Where                                                 |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Insights → Taxes**: the Romanian tax view of current holdings                       | `apps/frontend/src/features/ro-tax/`                  |
+| **Insights → Brokers**: how value and cost basis are split between accounts over time | `apps/frontend/src/features/broker-split/`            |
+| **Folio theme**, the default for new profiles                                         | `apps/frontend/src/themes/definitions/folio.css`      |
+| **Account icons**: a broker logo beside the account name                              | `apps/frontend/src/features/account-icon/`            |
+| **Cat profile avatars**: a pink and a blue cat in a Cats group of the avatar picker   | `apps/frontend/src/features/profiles/cat-avatars.tsx` |
 
 ## Taxes tab
 
@@ -41,6 +42,13 @@ logo limit) in its `meta` JSON under `icon`. The dashboard account rows, the
 account page title and the Brokers and Taxes tabs draw it beside the account
 name; accounts without one look as before. Funds use Wealthfolio's own custom
 asset logos. The owner's tracker sets both.
+
+## Cat avatars
+
+Two original round cats with a nub tail, pink and blue, drawn in SVG (no image
+files). Their IDs, `folio-cat-pink` and `folio-cat-blue`, are added to the
+backend allowlist in `crates/core/src/profiles/mod.rs`. They blink and wiggle
+the tail unless reduced motion is on.
 
 ## Branches and image
 

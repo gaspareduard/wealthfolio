@@ -247,6 +247,34 @@
   }
 }
 
+/* Folio fork: the cat avatars' nub tail wiggles now and then. */
+.profile-cat-tail {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: profile-cat-wiggle 5s ease-in-out infinite;
+}
+
+@keyframes profile-cat-wiggle {
+  0%,
+  80%,
+  100% {
+    transform: rotate(0deg);
+  }
+  85%,
+  95% {
+    transform: rotate(-14deg);
+  }
+  90% {
+    transform: rotate(10deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-cat-tail {
+    animation: none;
+  }
+}
+
 /* The loading screen uses the same artwork without movement. */
 .profile-avatar-static,
 .profile-avatar-static * {

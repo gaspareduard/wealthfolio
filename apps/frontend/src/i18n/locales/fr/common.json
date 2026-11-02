@@ -479,6 +479,7 @@
     "avatarGroup": "Avatars {{style}}",
     "avatarLabel": "Avatar {{style}} {{number}}",
     "avatarAll": "Tous",
+    "avatarCats": "Cats",
     "avatarSketch": "Croquis",
     "avatarLine": "Trait",
     "avatarPixel": "Pixel art",

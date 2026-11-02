@@ -3,6 +3,12 @@ import { describe, expect, it, vi } from "vitest";
 import { PROFILE_AVATAR_GROUPS } from "./avatar-catalog";
 import { ProfileAvatarPicker } from "./profile-avatar-picker";
 
+const gallery = vi.hoisted(() => ({ pictures: [] as string[] }));
+vi.mock("./avatar-gallery", () => ({
+  loadAvatarGallery: () => Promise.resolve(gallery.pictures),
+  saveToAvatarGallery: () => Promise.resolve(true),
+}));
+
 describe("ProfileAvatarPicker", () => {
   it("shows all avatars and only changes the avatar on selection", () => {
     const onChange = vi.fn();
@@ -36,5 +42,17 @@ describe("ProfileAvatarPicker", () => {
       }),
     );
     expect(onChange).toHaveBeenCalledWith(added);
+  });
+
+  it("offers the server's picture gallery first when it has pictures", async () => {
+    const picture = "data:image/png;base64,iVBORw0KGgo=";
+    gallery.pictures = [picture];
+    const onChange = vi.fn();
+    render(<ProfileAvatarPicker value="line-curls-animated" onChange={onChange} />);
+    fireEvent.click(await screen.findByRole("button", { name: "Gallery" }));
+    const avatars = within(screen.getByRole("group", { name: "Gallery avatars" }));
+    fireEvent.click(avatars.getByRole("button", { name: "Gallery avatar 1" }));
+    expect(onChange).toHaveBeenCalledWith(picture);
+    gallery.pictures = [];
   });
 });

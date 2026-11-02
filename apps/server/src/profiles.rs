@@ -263,6 +263,15 @@ impl WebProfiles {
             visited: std::sync::Mutex::new(Default::default()),
         }))
     }
+    /// Folio fork: the avatar gallery sits beside the server database.
+    fn avatar_gallery(&self) -> std::path::PathBuf {
+        std::path::Path::new(&self.config.db_path)
+            .parent()
+            .filter(|p| !p.as_os_str().is_empty())
+            .unwrap_or_else(|| std::path::Path::new("."))
+            .join(AVATAR_GALLERY_DIR)
+    }
+
     fn auto_open(&self, owner: &str) -> Result<Option<wealthfolio_core::profiles::ProfileSession>> {
         let revision = self
             .registry
@@ -381,6 +390,85 @@ async fn close_mcp_sessions(
         manager.close_session(&id).await.map_err(failure)?;
     }
     Ok(())
+}
+
+const AVATAR_GALLERY_DIR: &str = "avatar-gallery";
+const MAX_GALLERY_PICTURES: usize = 32;
+
+/// The PNG inside a valid custom avatar data URL.
+fn decode_custom_avatar(avatar: &str) -> Option<Vec<u8>> {
+    use base64::Engine as _;
+    if !wealthfolio_core::profiles::is_custom_avatar(avatar) {
+        return None;
+    }
+    base64::engine::general_purpose::STANDARD
+        .decode(&avatar[wealthfolio_core::profiles::CUSTOM_AVATAR_PREFIX.len()..])
+        .ok()
+}
+
+fn gallery_file(gallery: &std::path::Path, png: &[u8]) -> std::path::PathBuf {
+    use sha2::Digest as _;
+    gallery.join(format!("{:x}.png", sha2::Sha256::digest(png)))
+}
+
+/// Gallery pictures as avatar data URLs, oldest first. Files that are not valid
+/// custom avatars are skipped.
+fn list_gallery(gallery: &std::path::Path) -> std::io::Result<Vec<String>> {
+    use base64::Engine as _;
+    let entries = match std::fs::read_dir(gallery) {
+        Ok(entries) => entries,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
+        Err(error) => return Err(error),
+    };
+    let mut pictures = Vec::new();
+    for entry in entries {
+        let entry = entry?;
+        let name = entry.file_name();
+        let Some(stem) = name.to_str().and_then(|n| n.strip_suffix(".png")) else {
+            continue;
+        };
+        if stem.len() != 64 || !stem.bytes().all(|b| b.is_ascii_hexdigit()) {
+            continue;
+        }
+        let metadata = entry.metadata()?;
+        if !metadata.is_file()
+            || metadata.len() > wealthfolio_core::profiles::MAX_CUSTOM_AVATAR_BYTES as u64
+        {
+            continue;
+        }
+        let avatar = format!(
+            "{}{}",
+            wealthfolio_core::profiles::CUSTOM_AVATAR_PREFIX,
+            base64::engine::general_purpose::STANDARD.encode(std::fs::read(entry.path())?)
+        );
+        if wealthfolio_core::profiles::is_custom_avatar(&avatar) {
+            pictures.push((metadata.modified().ok(), name.clone(), avatar));
+        }
+    }
+    pictures.sort();
+    Ok(pictures.into_iter().map(|(_, _, avatar)| avatar).collect())
+}
+
+fn save_to_gallery(gallery: &std::path::Path, png: &[u8]) -> anyhow::Result<()> {
+    let path = gallery_file(gallery, png);
+    if path.is_file() {
+        return Ok(());
+    }
+    if list_gallery(gallery)?.len() >= MAX_GALLERY_PICTURES {
+        anyhow::bail!("The gallery is full ({MAX_GALLERY_PICTURES} pictures). Remove one first.");
+    }
+    std::fs::create_dir_all(gallery)?;
+    let temporary = path.with_extension("png.tmp");
+    std::fs::write(&temporary, png)?;
+    std::fs::rename(&temporary, &path)?;
+    Ok(())
+}
+
+fn remove_from_gallery(gallery: &std::path::Path, png: &[u8]) -> anyhow::Result<()> {
+    match std::fs::remove_file(gallery_file(gallery, png)) {
+        Err(error) if error.kind() != std::io::ErrorKind::NotFound => Err(error.into()),
+        _ => Ok(()),
+    }
 }
 
 pub fn router<S: Clone + Send + Sync + 'static>(root: Arc<WebProfiles>) -> Router<S> {
@@ -654,6 +742,34 @@ async fn command(
                 .ok_or_else(|| failure("Use device sync reset to remove enrollment."))?;
             wealthfolio_core::secrets::update_existing_sync_identity(store.as_ref(), identity)
                 .map_err(failure)?;
+            Ok(Json(Value::Null))
+        }
+        // Folio fork: pictures shared by every profile on this server.
+        "list_avatar_gallery" => {
+            let gallery = root.avatar_gallery();
+            let pictures = tokio::task::spawn_blocking(move || list_gallery(&gallery))
+                .await
+                .map_err(failure)?
+                .map_err(failure)?;
+            Ok(Json(json!({ "pictures": pictures })))
+        }
+        "save_avatar_to_gallery" | "remove_avatar_from_gallery" => {
+            let avatar = text(&body, "avatarId")?.to_string();
+            let png = decode_custom_avatar(&avatar).ok_or_else(|| {
+                failure("Choose a square PNG picture of at most 256 pixels and 64 KB.")
+            })?;
+            let gallery = root.avatar_gallery();
+            let save = command == "save_avatar_to_gallery";
+            tokio::task::spawn_blocking(move || {
+                if save {
+                    save_to_gallery(&gallery, &png)
+                } else {
+                    remove_from_gallery(&gallery, &png)
+                }
+            })
+            .await
+            .map_err(failure)?
+            .map_err(failure)?;
             Ok(Json(Value::Null))
         }
         _ => Err((StatusCode::NOT_FOUND, "Unknown profile operation".into())),

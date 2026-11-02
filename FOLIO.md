@@ -61,6 +61,14 @@ backend accepts it only as a square PNG of at most 256 pixels and 64 KB
 (`is_custom_avatar` in `crates/core/src/profiles/mod.rs`). Pictures live only on
 the installation that holds them, never in this repository or its image.
 
+On the self-hosted server, every uploaded picture is also kept in a **Gallery**
+group shown first in the picker, so any profile can choose it later. The gallery
+is the `avatar-gallery/` folder beside the server database (one `<sha256>.png`
+per picture, at most 32), reached through the profile commands
+`list_avatar_gallery`, `save_avatar_to_gallery` and
+`remove_avatar_from_gallery`. They need the server login, like the other profile
+commands.
+
 ## Branches and image
 
 - `folio/main` is the deployment branch: the fork commits on top of the latest

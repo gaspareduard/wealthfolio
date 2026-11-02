@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { loadAvatarGallery, saveToAvatarGallery } from "./avatar-gallery";
 import { pictureToAvatar } from "./custom-avatar";
 import { isCustomAvatar } from "./avatar-catalog";
 import { PROFILE_AVATAR_GROUPS, ProfileAvatar } from "./profile-avatar";
@@ -13,12 +14,25 @@ export function ProfileAvatarPicker({
 }) {
   const { t } = useTranslation("common");
   const [style, setStyle] = useState("All");
-  const groups = [
-    { name: "All", avatars: PROFILE_AVATAR_GROUPS.flatMap((group) => group.avatars) },
+  const [gallery, setGallery] = useState<string[]>([]);
+  useEffect(() => {
+    let current = true;
+    void loadAvatarGallery().then((pictures) => current && setGallery(pictures));
+    return () => {
+      current = false;
+    };
+  }, []);
+  const categories = [
+    ...(gallery.length ? [{ name: "Gallery", avatars: gallery }] : []),
     ...PROFILE_AVATAR_GROUPS,
+  ];
+  const groups = [
+    { name: "All", avatars: categories.flatMap((group) => group.avatars) },
+    ...categories,
   ];
   const labels: Record<string, string> = {
     All: t("profiles.avatarAll"),
+    Gallery: t("profiles.avatarGallery"),
     Cats: t("profiles.avatarCats"),
     Sketch: t("profiles.avatarSketch"),
     Line: t("profiles.avatarLine"),
@@ -26,7 +40,7 @@ export function ProfileAvatarPicker({
     "3D": t("profiles.avatar3d"),
     Abstract: t("profiles.avatarAbstract"),
   };
-  const group = groups.find((group) => group.name === style)!;
+  const group = groups.find((group) => group.name === style) ?? groups[0];
   const fileInput = useRef<HTMLInputElement>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
   const upload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +49,9 @@ export function ProfileAvatarPicker({
     if (!file) return;
     const avatar = await pictureToAvatar(file);
     setUploadFailed(avatar === null);
-    if (avatar) onChange(avatar);
+    if (!avatar) return;
+    onChange(avatar);
+    if (await saveToAvatarGallery(avatar)) setGallery(await loadAvatarGallery());
   };
   return (
     <div className="space-y-3">
@@ -81,12 +97,12 @@ export function ProfileAvatarPicker({
         aria-label={t("profiles.avatarGroup", { style: labels[style] })}
         className="grid w-full grid-cols-4 gap-3 !overflow-visible pt-4 pb-8 sm:grid-cols-8 sm:gap-2"
       >
-        {group.avatars.map((id) => (
+        {group.avatars.map((id, index) => (
           <button
             type="button"
-            key={id}
+            key={isCustomAvatar(id) ? `picture-${index}` : id}
             aria-label={(() => {
-              const category = PROFILE_AVATAR_GROUPS.find((entry) => entry.avatars.includes(id))!;
+              const category = categories.find((entry) => entry.avatars.includes(id))!;
               return t("profiles.avatarLabel", {
                 style: labels[category.name],
                 number: category.avatars.indexOf(id) + 1,

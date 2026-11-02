@@ -456,6 +456,8 @@
     "avatarGroup": "{{style}} 아바타",
     "avatarLabel": "{{style}} 아바타 {{number}}",
     "avatarAll": "전체",
+    "avatarUpload": "Upload picture",
+    "avatarUploadFailed": "That picture could not be used. Try a PNG or JPEG.",
     "avatarCats": "Cats",
     "avatarSketch": "스케치",
     "avatarLine": "선화",

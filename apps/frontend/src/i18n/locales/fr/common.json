@@ -479,6 +479,8 @@
     "avatarGroup": "Avatars {{style}}",
     "avatarLabel": "Avatar {{style}} {{number}}",
     "avatarAll": "Tous",
+    "avatarUpload": "Upload picture",
+    "avatarUploadFailed": "That picture could not be used. Try a PNG or JPEG.",
     "avatarCats": "Cats",
     "avatarSketch": "Croquis",
     "avatarLine": "Trait",

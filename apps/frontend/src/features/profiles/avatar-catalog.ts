@@ -403,6 +403,24 @@ export const PROFILE_AVATAR_GROUPS = [
     ],
   },
 ];
+/**
+ * Folio fork: a profile may use its own picture instead, kept inline as a small
+ * square PNG data URL. The backend checks the PNG header, size and squareness.
+ */
+export const CUSTOM_AVATAR_PREFIX = "data:image/png;base64,";
+export const MAX_CUSTOM_AVATAR_BYTES = 64 * 1024;
+export const CUSTOM_AVATAR_SIZE = 192;
+
+export function isCustomAvatar(id: string): boolean {
+  if (!id.startsWith(CUSTOM_AVATAR_PREFIX)) return false;
+  const encoded = id.slice(CUSTOM_AVATAR_PREFIX.length);
+  return (
+    encoded.length > 0 &&
+    encoded.length <= Math.ceil(MAX_CUSTOM_AVATAR_BYTES / 3) * 4 &&
+    /^[A-Za-z0-9+/]+={0,2}$/.test(encoded)
+  );
+}
+
 export const DEFAULT_PROFILE_AVATAR = "default";
 export const PROFILE_AVATARS = [
   DEFAULT_PROFILE_AVATAR,

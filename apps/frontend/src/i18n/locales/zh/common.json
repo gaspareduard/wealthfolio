@@ -456,6 +456,8 @@
     "avatarGroup": "{{style}}头像",
     "avatarLabel": "{{style}}头像 {{number}}",
     "avatarAll": "全部",
+    "avatarUpload": "Upload picture",
+    "avatarUploadFailed": "That picture could not be used. Try a PNG or JPEG.",
     "avatarCats": "Cats",
     "avatarSketch": "素描",
     "avatarLine": "线条",

@@ -1,5 +1,5 @@
 import type { ProfileSummary } from "./api";
-import { PROFILE_AVATARS } from "./avatar-catalog";
+import { PROFILE_AVATARS, isCustomAvatar } from "./avatar-catalog";
 
 const STARTUP_HINT_KEY = "wealthfolio-profile-opening";
 const MAX_AGE_MS = 5 * 60 * 1000;
@@ -33,7 +33,8 @@ export function openingProfileHint(): Pick<ProfileSummary, "id" | "name" | "avat
       value.id.length <= 64 &&
       value.name.length <= 100 &&
       typeof value.avatarId === "string" &&
-      PROFILE_AVATARS.some((avatar) => avatar === value.avatarId) &&
+      (PROFILE_AVATARS.some((avatar) => avatar === value.avatarId) ||
+        isCustomAvatar(value.avatarId)) &&
       typeof value.at === "number" &&
       Date.now() >= value.at &&
       Date.now() - value.at < MAX_AGE_MS

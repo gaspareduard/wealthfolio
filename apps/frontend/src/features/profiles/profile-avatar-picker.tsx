@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
+import { pictureToAvatar } from "./custom-avatar";
+import { isCustomAvatar } from "./avatar-catalog";
 import { PROFILE_AVATAR_GROUPS, ProfileAvatar } from "./profile-avatar";
 
 export function ProfileAvatarPicker({
@@ -25,8 +27,42 @@ export function ProfileAvatarPicker({
     Abstract: t("profiles.avatarAbstract"),
   };
   const group = groups.find((group) => group.name === style)!;
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [uploadFailed, setUploadFailed] = useState(false);
+  const upload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    const avatar = await pictureToAvatar(file);
+    setUploadFailed(avatar === null);
+    if (avatar) onChange(avatar);
+  };
   return (
     <div className="space-y-3">
+      <div className="flex items-center gap-3">
+        {isCustomAvatar(value) && (
+          <ProfileAvatar id={value} className="mx-0 size-12 rounded-full" />
+        )}
+        <button
+          type="button"
+          onClick={() => fileInput.current?.click()}
+          className="focus-visible:ring-ring text-muted-foreground hover:text-foreground rounded-full bg-white/20 px-3 py-1.5 text-xs focus-visible:ring-2 dark:bg-white/5"
+        >
+          {t("profiles.avatarUpload")}
+        </button>
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="hidden"
+          onChange={(event) => void upload(event)}
+        />
+        {uploadFailed && (
+          <span role="alert" className="text-destructive text-xs">
+            {t("profiles.avatarUploadFailed")}
+          </span>
+        )}
+      </div>
       <div role="group" aria-label={t("profiles.avatarStyle")} className="flex flex-wrap gap-1">
         {groups.map((item) => (
           <button

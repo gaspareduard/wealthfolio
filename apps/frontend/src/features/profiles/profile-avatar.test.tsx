@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { FOLIO_CATS } from "./avatar-catalog";
+import { FOLIO_CATS, MAX_CUSTOM_AVATAR_BYTES, isCustomAvatar } from "./avatar-catalog";
 import { DEFAULT_PROFILE_AVATAR, PROFILE_AVATARS, ProfileAvatar } from "./profile-avatar";
 
 describe("profile avatars", () => {
@@ -27,6 +27,23 @@ describe("profile avatars", () => {
       for (const [, asset] of assets) {
         expect(existsSync(resolve("public/avatars", asset)), asset).toBe(true);
       }
+    }
+  });
+
+  it("shows a profile's own picture and rejects anything else", () => {
+    const picture = "data:image/png;base64,iVBORw0KGgo=";
+    expect(isCustomAvatar(picture)).toBe(true);
+    const markup = renderToStaticMarkup(<ProfileAvatar id={picture} />);
+    expect(markup).toContain(`src="${picture}"`);
+    expect(markup).toContain('alt=""');
+    for (const id of [
+      "data:image/svg+xml;base64,PHN2Zz4=",
+      "data:image/png;base64,",
+      'data:image/png;base64,iVBOR" onerror="x',
+      `data:image/png;base64,${"A".repeat(Math.ceil(MAX_CUSTOM_AVATAR_BYTES / 3) * 4 + 4)}`,
+      "https://example.com/cat.png",
+    ]) {
+      expect(isCustomAvatar(id), id.slice(0, 40)).toBe(false);
     }
   });
 

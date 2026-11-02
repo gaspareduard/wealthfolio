@@ -75,8 +75,11 @@ fn validate_name(name: &str, avatar: &str) -> ProfileResult<()> {
             "Use a profile name of 1–60 characters.".into(),
         ));
     }
-    if !PROFILE_AVATARS.contains(&avatar) {
-        return Err(ProfileError::Invalid("Choose a bundled avatar.".into()));
+    if !is_valid_avatar(avatar) {
+        return Err(ProfileError::Invalid(
+            "Choose a bundled avatar or a square PNG picture of at most 256 pixels and 64 KB."
+                .into(),
+        ));
     }
     Ok(())
 }
@@ -1153,6 +1156,53 @@ mod tests {
         data.profiles[0].avatar_id = "../../unrecognized".into();
         fs::write(&path, serde_json::to_vec(&data).unwrap()).unwrap();
         assert!(read_registry(&path).is_err());
+    }
+
+    #[test]
+    fn custom_avatars_must_be_small_square_pngs() {
+        use base64::Engine as _;
+        let png = |width: u32, height: u32, extra: usize| {
+            let mut bytes = b"\x89PNG\r\n\x1a\n\0\0\0\x0dIHDR".to_vec();
+            bytes.extend(width.to_be_bytes());
+            bytes.extend(height.to_be_bytes());
+            bytes.extend(vec![0; extra]);
+            format!(
+                "{CUSTOM_AVATAR_PREFIX}{}",
+                base64::engine::general_purpose::STANDARD.encode(bytes)
+            )
+        };
+        assert!(is_valid_avatar(&png(160, 160, 100)));
+        assert!(is_valid_avatar(DEFAULT_PROFILE_AVATAR));
+        for avatar in [
+            png(160, 120, 100),
+            png(512, 512, 100),
+            png(0, 0, 100),
+            png(160, 160, MAX_CUSTOM_AVATAR_BYTES),
+            format!("{CUSTOM_AVATAR_PREFIX}not base64!"),
+            "data:image/svg+xml;base64,PHN2Zz4=".into(),
+            "../../unrecognized".into(),
+        ] {
+            assert!(!is_valid_avatar(&avatar), "{}", &avatar[..avatar.len().min(40)]);
+        }
+
+        let dir = tempfile::tempdir().unwrap();
+        let registry = ProfileRegistry::open(
+            dir.path().into(),
+            dir.path().join("app.db"),
+            Arc::new(Secrets::default()),
+        )
+        .unwrap();
+        let id = registry.default_id().unwrap();
+        registry.update(id, "Personal", &png(160, 160, 100)).unwrap();
+        assert!(registry.update(id, "Personal", &png(160, 120, 100)).is_err());
+        drop(registry);
+        let registry = ProfileRegistry::open(
+            dir.path().into(),
+            dir.path().join("app.db"),
+            Arc::new(Secrets::default()),
+        )
+        .unwrap();
+        assert_eq!(registry.profile(id).unwrap().avatar_id, png(160, 160, 100));
     }
 
     #[test]

@@ -456,6 +456,8 @@
     "avatarGroup": "{{style}}のアバター",
     "avatarLabel": "{{style}}のアバター{{number}}",
     "avatarAll": "すべて",
+    "avatarUpload": "Upload picture",
+    "avatarUploadFailed": "That picture could not be used. Try a PNG or JPEG.",
     "avatarCats": "Cats",
     "avatarSketch": "スケッチ",
     "avatarLine": "線画",

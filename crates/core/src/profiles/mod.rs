@@ -66,6 +66,41 @@ pub const PROFILE_AVATARS: &[&str] = &[
     "folio-cat-blue",
 ];
 
+/// Folio fork: a profile may instead use its own picture, kept inline in the
+/// registry as a small square PNG data URL.
+pub const CUSTOM_AVATAR_PREFIX: &str = "data:image/png;base64,";
+pub const MAX_CUSTOM_AVATAR_BYTES: usize = 64 * 1024;
+pub const MAX_CUSTOM_AVATAR_SIZE: u32 = 256;
+
+/// A bundled avatar ID or a valid custom picture.
+pub fn is_valid_avatar(avatar: &str) -> bool {
+    PROFILE_AVATARS.contains(&avatar) || is_custom_avatar(avatar)
+}
+
+/// A PNG data URL of at most 64 KB whose image is square and at most 256 pixels.
+pub fn is_custom_avatar(avatar: &str) -> bool {
+    use base64::Engine as _;
+    let Some(encoded) = avatar.strip_prefix(CUSTOM_AVATAR_PREFIX) else {
+        return false;
+    };
+    if encoded.len() > MAX_CUSTOM_AVATAR_BYTES.div_ceil(3) * 4 {
+        return false;
+    }
+    let Ok(png) = base64::engine::general_purpose::STANDARD.decode(encoded) else {
+        return false;
+    };
+    if png.len() > MAX_CUSTOM_AVATAR_BYTES
+        || png.len() < 24
+        || !png.starts_with(b"\x89PNG\r\n\x1a\n")
+        || &png[12..16] != b"IHDR"
+    {
+        return false;
+    }
+    let width = u32::from_be_bytes([png[16], png[17], png[18], png[19]]);
+    let height = u32::from_be_bytes([png[20], png[21], png[22], png[23]]);
+    width == height && (1..=MAX_CUSTOM_AVATAR_SIZE).contains(&width)
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum ProfileError {
     #[error("PROFILE_LOCKED: Unlock this profile to continue.")]

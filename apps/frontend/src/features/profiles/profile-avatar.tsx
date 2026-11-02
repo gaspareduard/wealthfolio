@@ -7,6 +7,7 @@ import {
   ANIMATED_SKETCH,
   ABSTRACT_SCULPTURES,
   FOLIO_CATS,
+  isCustomAvatar,
 } from "./avatar-catalog";
 export { DEFAULT_PROFILE_AVATAR, PROFILE_AVATARS, PROFILE_AVATAR_GROUPS } from "./avatar-catalog";
 import type { CSSProperties } from "react";
@@ -32,6 +33,20 @@ export function ProfileAvatar({
 function AvatarArtwork({ id, className }: { id: string; className?: string }) {
   const portrait = LINE_PORTRAITS.find((candidate) => candidate.id === id);
   if (portrait) return <LinePortraitAvatar portrait={portrait} className={className} />;
+  if (isCustomAvatar(id)) {
+    return (
+      <img
+        src={id}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        className={cn(
+          "mx-auto block aspect-square w-20 max-w-full rounded-2xl object-cover",
+          className,
+        )}
+      />
+    );
+  }
   const cat = FOLIO_CATS[id];
   if (cat) return <CatAvatar cat={cat} className={className} />;
   const persona = PERSONA_AVATARS.find((candidate) => candidate.id === id);

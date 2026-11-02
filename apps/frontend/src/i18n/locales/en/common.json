@@ -465,6 +465,8 @@
     "avatarGroup": "{{style}} avatars",
     "avatarLabel": "{{style}} avatar {{number}}",
     "avatarAll": "All",
+    "avatarUpload": "Upload picture",
+    "avatarUploadFailed": "That picture could not be used. Try a PNG or JPEG.",
     "avatarCats": "Cats",
     "avatarSketch": "Sketch",
     "avatarLine": "Line",

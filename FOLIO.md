@@ -82,6 +82,15 @@ commands.
 
 ## Branches and image
 
+The hosted web server refreshes market quotes and recalculates the portfolio
+60 seconds after each update finishes, starting two minutes after startup.
+Open clients receive the existing completion events automatically, without a
+loading toast every minute; refresh failures still appear. Quote
+freshness still depends on each provider and exchange: delayed feeds, fund NAVs,
+and closed markets cannot supply live prices. Broker transaction sync keeps its
+existing four-hour schedule where Wealthfolio Connect is enabled. The desktop
+and mobile refresh schedule is unchanged.
+
 - `folio/main` is the deployment branch: the fork commits on top of the latest
   upstream release tag (currently `v3.12.0`).
 - `main` stays at the fork point. Pushing upstream commits to it would start

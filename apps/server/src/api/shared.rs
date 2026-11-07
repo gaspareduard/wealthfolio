@@ -132,6 +132,7 @@ pub fn trigger_portfolio_recalc_with_asset_sync(state: Arc<AppState>, asset_ids:
 /// observer turns its callbacks into SSE events.
 pub struct ServerJobObserver {
     event_bus: EventBus,
+    announce_start: bool,
     health_service: Arc<dyn HealthServiceTrait + Send + Sync>,
     goal_service: Arc<dyn wealthfolio_core::goals::GoalServiceTrait + Send + Sync>,
 }
@@ -140,6 +141,7 @@ impl ServerJobObserver {
     pub fn new(state: &AppState) -> Self {
         Self {
             event_bus: state.event_bus.clone(),
+            announce_start: true,
             health_service: state.health_service.clone(),
             goal_service: state.goal_service.clone(),
         }
@@ -152,6 +154,7 @@ impl ServerJobObserver {
     ) -> Self {
         Self {
             event_bus,
+            announce_start: true,
             health_service,
             goal_service,
         }
@@ -168,7 +171,9 @@ impl ServerJobObserver {
 #[async_trait::async_trait]
 impl JobObserver for ServerJobObserver {
     fn market_sync_started(&self) {
-        self.event_bus.publish(ServerEvent::new(MARKET_SYNC_START));
+        if self.announce_start {
+            self.event_bus.publish(ServerEvent::new(MARKET_SYNC_START));
+        }
     }
 
     fn market_sync_completed(&self, result: &SyncResult) {
@@ -194,8 +199,10 @@ impl JobObserver for ServerJobObserver {
     }
 
     fn update_started(&self) {
-        self.event_bus
-            .publish(ServerEvent::new(PORTFOLIO_UPDATE_START));
+        if self.announce_start {
+            self.event_bus
+                .publish(ServerEvent::new(PORTFOLIO_UPDATE_START));
+        }
     }
 
     fn update_failed(&self, failure: &AccountFailure) {
@@ -267,15 +274,20 @@ pub fn spawn_portfolio_update(state: Arc<AppState>) {
     });
 }
 
-/// The app's periodic market sync plus portfolio update (6h, after a 2min
+/// The web server's periodic market sync plus portfolio update (60s, after a 2min
 /// delay). The handle joins the profile's workers so the loop stops with its
 /// profile.
 pub fn spawn_periodic_update(state: Arc<AppState>) -> tokio::task::JoinHandle<()> {
-    let observer: Arc<dyn JobObserver> = Arc::new(ServerJobObserver::new(&state));
+    // Keep background refreshes quiet; completion still refreshes client caches,
+    // and failures remain visible. Explicit user updates retain progress events.
+    let observer: Arc<dyn JobObserver> = Arc::new(ServerJobObserver {
+        announce_start: false,
+        ..ServerJobObserver::new(&state)
+    });
     tokio::spawn(run_periodic_update(
         state.portfolio_coordinator.clone(),
         observer,
         std::time::Duration::from_secs(120),
-        std::time::Duration::from_secs(6 * 3600),
+        std::time::Duration::from_secs(60),
     ))
 }

@@ -623,8 +623,8 @@ pub async fn run_periodic_update(
 ) {
     tokio::time::sleep(initial_delay).await;
     info!(
-        "Periodic portfolio update started (interval: {}h)",
-        interval.as_secs() / 3600
+        "Periodic portfolio update started (interval: {}s)",
+        interval.as_secs()
     );
     loop {
         let report = coordinator
